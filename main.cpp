@@ -3,7 +3,7 @@
 //  GLUT-car
 #include <stdio.h>
 #include <stdlib.h>
-#include <gl/glut.h>
+#include <GL/freeglut.h>
 #include <math.h>
 #include <string.h>
 
@@ -18,13 +18,13 @@ float i, theta;
 GLint nml = 0, day = 1;
 
 char str[] = "DSCE";
-char name3[] = "PROJECT:  3D CAR  ANIMATION";
+char name3[] = "PROJECT: Electric car advertisement";
 
-GLfloat xt = 0.0, yt = 0.0, zt = 0.0, xw = 0.0;   /* x,y,z translation */
+GLfloat xt = 0.5, yt = 0.0, zt = 0.0, xw = 0.0;   /* x,y,z translation */
 GLfloat tx = 295, ty = 62;
 GLfloat xs = 1.0, ys = 1.0, zs = 1.0;
 
-GLfloat xangle = 0.0, yangle = 0.0, zangle = 0.0, angle = 0.0;   /* axis angles */
+GLfloat xangle = 20.0, yangle = 180.0, zangle = 0.0, angle = 0.0;   /* axis angles */
 
 GLfloat r = 0, g = 0, b = 1;
 GLint light = 1;
@@ -34,7 +34,36 @@ int flag1 = 0, aflag = 1;            //to switch car driving mode
 int flag2 = 0, wheelflag = 0;   //to switch fog effect
 GLUquadricObj *t;
 
+
+GLfloat n[6][3] = {  /* Normals for the 6 faces of a cube. */
+  {-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {1.0, 0.0, 0.0},
+  {0.0, -1.0, 0.0}, {0.0, 0.0, 1.0}, {0.0, 0.0, -1.0} };
+GLint faces[6][4] = {  /* Vertex indices for the 6 faces of a cube. */
+  {0, 1, 2, 3}, {3, 2, 6, 7}, {7, 6, 5, 4},
+  {4, 5, 1, 0}, {5, 6, 2, 1}, {7, 4, 0, 3} };
+GLfloat v[8][3];  /* Will be filled in with X,Y,Z vertexes. */
+
+void
+drawBox(void)
+{
+	int i;
+
+	for (i = 0; i < 6; i++) {
+		glBegin(GL_QUADS);
+		glNormal3fv(&n[i][0]);
+		glVertex3fv(&v[faces[i][0]][0]);
+		glVertex3fv(&v[faces[i][1]][0]);
+		glVertex3fv(&v[faces[i][2]][0]);
+		glVertex3fv(&v[faces[i][3]][0]);
+		glEnd();
+	}
+}
+
 static void SpecialKeyFunc(int Key, int x, int y);
+
+void resetCar() {
+	xt = 0.5;
+}
 
 /* Simple  transformation routine */
 GLvoid Transform(GLfloat Width, GLfloat Height)
@@ -50,6 +79,15 @@ GLvoid Transform(GLfloat Width, GLfloat Height)
 /* A general OpenGL initialization function.  Sets all of the initial parameters. */
 GLvoid InitGL(GLfloat Width, GLfloat Height)
 {
+
+	/* Setup cube vertex data. */
+	v[0][0] = v[1][0] = v[2][0] = v[3][0] = -1;
+	v[4][0] = v[5][0] = v[6][0] = v[7][0] = 1;
+	v[0][1] = v[1][1] = v[4][1] = v[5][1] = -1;
+	v[2][1] = v[3][1] = v[6][1] = v[7][1] = 1;
+	v[0][2] = v[3][2] = v[4][2] = v[7][2] = 2 ;
+	v[1][2] = v[2][2] = v[5][2] = v[6][2] = -1;
+
 
 	glClearColor(1.0, 1.0, 1.0, 1.0);
 	glLineWidth(2.0);              /* Add line width,   ditto */
@@ -125,42 +163,35 @@ void display_string(int x, int y, const char *string, int font)
 void display1(void)
 {
 	
-	glClearColor(1.0, 1.0, 0.1, 1.0);
+	glClearColor(1.0, 1.0, 1.0, 1.0);
 	display_string(180, 540, str, 1); //correct cordinate according to name
 	display_string(215, 500, name3, 1);
-	display_string(390, 470, "HELP", 2);
-	display_string(10, 450, "MOUSE", 2);
-	display_string(10, 410, "PRESS RIGHT BUTTON FOR MENU", 3);
-	display_string(10, 370, "KEYBOARD", 2);
-	display_string(10, 340, "X-Y-Z KEYS FOR CORRESPONDING ROTATION", 3);
-	display_string(10, 310, "A-S-Q CAR CUSTOM SIZE SELECTION", 3);
-	display_string(10, 280, "U-F FOR CAMERA VIEW SETTINGS", 3);
-	display_string(10, 250, "USE LEFT ARROW(<-) AND RIGHT ARROW(->) TO MOVE CAR", 3);
+	// display_string(390, 470, "HELP", 2);
+	// display_string(10, 450, "MOUSE", 2);
+	// display_string(10, 410, "PRESS RIGHT BUTTON FOR MENU", 3);
+	// display_string(10, 370, "KEYBOARD", 2);
+	// display_string(10, 340, "X-Y-Z KEYS FOR CORRESPONDING ROTATION", 3);
+	// display_string(10, 310, "A-S-Q CAR CUSTOM SIZE SELECTION", 3);
+	// display_string(10, 280, "U-F FOR CAMERA VIEW SETTINGS", 3);
+	// display_string(10, 250, "USE LEFT ARROW(<-) AND RIGHT ARROW(->) TO MOVE CAR", 3);
 	display_string(10, 220, "ESCAPE TO EXIT", 3);
-	display_string(250, 150, "PRESS SPACE BAR TO ENTER", 2);
+	display_string(250, 150, "PRESS SPACE BAR TO Change views", 2);
 	glutPostRedisplay();
 	glutSwapBuffers();
 
 }
 
-GLvoid DrawGLScene()
-{
 
+void drawCar() {
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	/* Clear The Screen And The Depth Buffer */
-	if (view == 0)
-	{
-		init();
-		display1();
-	}
-	else
-	{
+		flag1 = 1;
+		flag2 = 0;
+		wheelflag = 0;
+		//xangle += 5.0;
+		glutPostRedisplay();
 		if (count == 1)
 			InitGL(Xsize, Ysize);
-		if (aflag == 1)/* Initialize our window. */
-			glClearColor(1, 1, 1, 1);
-		else
-			glClearColor(0.1, 0.1, 0.1, 0);
+		glClearColor(0.1, 0.1, 0.1, 0);
 		glPushMatrix();
 		glLoadIdentity();
 		glTranslatef(-1.0, 0.0, -3.5);
@@ -172,41 +203,30 @@ GLvoid DrawGLScene()
 		glEnable(GL_COLOR_MATERIAL);
 		glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 
-		if (flag2 == 1)
-		{
-			GLfloat fogcolour[4] = { 1.0,1.0,1.0,1.0 };
-
-			glFogfv(GL_FOG_COLOR, fogcolour);              /* Define the fog colour */
-			glFogf(GL_FOG_DENSITY, 0.1);                   /* How dense */
-			glFogi(GL_FOG_MODE, GL_EXP);                   /* exponential decay */
-			glFogf(GL_FOG_START, 3.0);                   /* Where wwe start fogging */
-			glFogf(GL_FOG_END, 100.0);                       /* end */
-			glHint(GL_FOG_HINT, GL_FASTEST);              /* compute per vertex */
-			glEnable(GL_FOG);/* ENABLE */
-		}
 		if (flag2 == 0)
 		{
 			glDisable(GL_FOG);
 		}
 
-		if (!aflag) {
-			glBegin(GL_POINTS);
-			glColor3f(1, 1, 1);
-			glPointSize(200.0);
-			int ccount = 0;
-			float x = 10, y = 10;
-			while (ccount < 20)
-			{
-				glVertex2f(x, y);
-				x += 10;
-				y += 10;
-				if (y > Ysize) y -= 10;
-				if (x > Xsize) x -= 10;
-				ccount++;
-			}
-			glEnd();
-		}
+		// if (!aflag) {
+		// 	glBegin(GL_POINTS);
+		// 	glColor3f(1, 1, 1);
+		// 	glPointSize(200.0);
+		// 	int ccount = 0;
+		// 	float x = 10, y = 10;
+		// 	while (ccount < 20)
+		// 	{
+		// 		glVertex2f(x, y);
+		// 		x += 10;
+		// 		y += 10;
+		// 		if (y > Ysize) y -= 10;
+		// 		if (x > Xsize) x -= 10;
+		// 		ccount++;
+		// 	}
+		// 	glEnd();
+		// }
 
+		// Headlights
 		glColor3f(1.0, .75, 0.0);
 		glPointSize(30.0);
 		glBegin(GL_POINTS);
@@ -420,15 +440,25 @@ GLvoid DrawGLScene()
 			glVertex3f(100, 0.1, 1);
 			glVertex3f(100, 0.1, 0.55);
 
+
 			glColor3f(0, 1, 0);
 			glVertex3f(-100, 0.1, 1);
 			glVertex3f(-100, 0.1, 100);         //a green surroundings
 			glVertex3f(100, 0.1, 100);
 			glVertex3f(100, 0.1, 1);
+
+			
+
 			glPopMatrix();
+
+			
 		}
 		glEnd();
 
+		//glTranslatef(0, 0.5, 0);
+		glutSolidSphere(0.2, 32, 32);
+
+		glTranslatef(0.0, 0.0, 0.0);
 		if (wheelflag)
 		{
 			glPushMatrix();
@@ -536,6 +566,49 @@ GLvoid DrawGLScene()
 		glEnable(GL_DEPTH_TEST);
 		glutPostRedisplay();
 		glutSwapBuffers();
+}
+
+void drawSurroundings() {
+
+}
+
+GLvoid DrawGLScene()
+{
+
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	/* Clear The Screen And The Depth Buffer */
+	if (view == 0)
+	{
+		init();
+		display1();
+	}
+	if (view == 1)
+	{
+		
+
+		// /*Adjust cube position to be asthetic angle. */
+		// glTranslatef(0.0, 0.0, -1.0);
+		// glRotatef(90, 1.0, 0.0, 0.0);
+		// glRotatef(20, 0.0, 0.0, 1.0);
+		//drawBox();
+		//glutSwapBuffers();
+				drawCar();
+		//drawSurroundings();
+
+
+		for (int i = 0;i < 10;i++ ) {
+			xt -= 0.002;
+			angle += 5;
+			//xw += 0.2;
+		}
+	}
+	if (view == 2) {
+		
+		resetCar();
+		r = 1;
+		g = 0;
+		b = 0;
+		drawCar();
 	}
 }
 
@@ -549,82 +622,10 @@ void NormalKey(GLubyte key, GLint x, GLint y)
 		exit(0);
 		break;
 
-	case ' ':view = 1;
+	case ' ':
+		view++;
 		DrawGLScene();
 		break;
-
-	case 'x': xangle += 5.0;
-		glutPostRedisplay();
-		break;
-
-	case 'X':xangle -= 5.0;
-		glutPostRedisplay();
-		break;
-
-	case 'y':
-		yangle += 5.0;
-		glutPostRedisplay();
-		break;
-
-	case 'Y':
-		yangle -= 5.0;
-		glutPostRedisplay();
-		break;
-
-	case 'z':
-		zangle += 5.0;
-		glutPostRedisplay();
-		break;
-
-	case 'Z':
-		zangle -= 5.0;
-		glutPostRedisplay();
-		break;
-
-	case 'u':                          /* Move up */
-		yt += 0.2;
-		glutPostRedisplay();
-		break;
-
-	case 'U':
-		yt -= 0.2;                      /* Move down */
-		glutPostRedisplay();
-		break;
-
-	case 'f':                          /* Move forward */
-		zt += 0.2;
-		glutPostRedisplay();
-		break;
-
-	case 'F':
-		zt -= 0.2;                      /* Move away */
-		glutPostRedisplay();
-		break;
-
-	case 's':zs += .2;
-		glutPostRedisplay();
-		break;
-
-	case 'S':zs -= 0.2;
-		glutPostRedisplay();
-		break;
-
-	case 'a':ys += .2;
-		glutPostRedisplay();
-		break;
-
-	case 'A':ys -= 0.2;
-		glutPostRedisplay();
-		break;
-
-	case 'q':xs += .2;
-		glutPostRedisplay();
-		break;
-
-	case 'Q':xs -= 0.2;
-		glutPostRedisplay();
-		break;
-
 
 	default:
 		break;
@@ -632,32 +633,6 @@ void NormalKey(GLubyte key, GLint x, GLint y)
 
 }
 
-static void SpecialKeyFunc(int Key, int x, int y)
-{
-	switch (Key) {
-	case GLUT_KEY_RIGHT:
-		if (!wheelflag)
-			xt += 0.2;
-		if (wheelflag)
-		{
-			angle += 5;
-			xw += 0.2;
-		}
-		glutPostRedisplay();
-		break;
-
-	case GLUT_KEY_LEFT:
-		if (!wheelflag)
-			xt -= 0.2;
-		if (wheelflag)
-		{
-			angle += 5;
-			xw -= 0.2;
-		}
-		glutPostRedisplay();
-		break;
-	}
-}
 
 void myMenu(int id)
 {
@@ -849,25 +824,8 @@ int main(int argc, char **argv)
 	glutDisplayFunc(DrawGLScene);        /* Function to do all our OpenGL drawing. */
 	glutReshapeFunc(ReSizeGLScene);
 	glutKeyboardFunc(NormalKey);         /*Normal key is pressed */
-	glutSpecialFunc(SpecialKeyFunc);
+	//glutSpecialFunc(SpecialKeyFunc);
 	InitGL(Xsize, Ysize);
-	int submenu = glutCreateMenu(colorMenu);
-	glutAddMenuEntry("blue", 6);
-	glutAddMenuEntry("red", 7);
-	glutAddMenuEntry("green", 8);
-	glutAddMenuEntry("black", 9);
-	glutAddMenuEntry("yellow", 10);
-	glutAddMenuEntry("grey", 11);
-	glutCreateMenu(myMenu);
-	glutAddMenuEntry("car model mode", 1);
-	glutAddMenuEntry("car driving mode", 2);
-	glutAddMenuEntry("fog effect", 3);
-	glutAddMenuEntry("wheel effect", 4);
-	glutAddMenuEntry("toggle light", 5);
-	glutAddSubMenu("car colors", submenu);
-	glutAddMenuEntry("daymode", 12);
-	glutAddMenuEntry("Night mode", 13);
-	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
 	/* Now drop into the event loop from which we never return */
 
