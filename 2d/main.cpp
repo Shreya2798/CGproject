@@ -139,19 +139,19 @@ void rectangleD(double x1, double y1, double x2, double y2, double z)
 
 void ambulance()
 {
-	char stringO_1[] = "AMBULANCE";
+	// char stringO_1[] = "AMBULANCE";
 
-	// Display Text
-	glPushMatrix();
-	glTranslatef(-90, -100, 3);
-	glScaled(0.5, 0.5, 0);
-	glColor3f(1, 0, 0);
-	drawText(stringO_1);
-	glPopMatrix();
+	// // Display Text
+	// glPushMatrix();
+	// glTranslatef(-90, -100, 3);
+	// glScaled(0.5, 0.5, 0);
+	// glColor3f(1, 0, 0);
+	// drawText(stringO_1);
+	// glPopMatrix();
 
-	// Ambulance Body
+	// Car Body
 	glColor3d(1, 1, 1);
-	rectangleD(-350, -200, 350, 200, 2);
+	rectangleD(-50, -200, 360, 100, 2);
 	
 	// Ambulance Engine
 	glBegin(GL_POLYGON);
@@ -165,13 +165,24 @@ void ambulance()
 	glVertex3d(355, 100, 2);
 	glEnd();
 	
+    // Ambulance Engine
+	glBegin(GL_POLYGON);
+	glColor3d(1, 1, 1);
+	glVertex3d(355, -200, 2);
+	glVertex3d(650, -200, 2);
+	glVertex3d(650, -65, 2);
+	glVertex3d(635, -50, 2);
+	glVertex3d(550, -50, 2);
+	glVertex3d(500, 100, 2);
+	glVertex3d(355, 100, 2);
+	glEnd();
 
 	// Back Tire
 	glPushMatrix();
-	glTranslated(-150, -210, 0);
-	glColor3d(0, 0, 0);		// Tire
+	glTranslated(-250, -210, 0);
+	glColor3d(0.5, 0.5, 0.5);		// Tire
 	circleD(75, 3);
-	glColor3d(0.8, 0, 0);	// Rim
+	glColor3d(0,0 , 0);	// Rim
 	circleD(50, 4);
 	glPopMatrix();
 
@@ -179,7 +190,7 @@ void ambulance()
 	glPushMatrix();
 	glTranslated(500, -210, 0);
 	glColor3d(0, 0, 0);		// Tire
-	circleD(75, 3);
+	circleD(100, 3);
 	glColor3d(0.8, 0, 0);	// Rim
 	circleD(50, 4);
 	glPopMatrix();
@@ -191,20 +202,6 @@ void ambulance()
 	glVertex3d(480, 75, 3);
 	glVertex3d(375, 75, 3);
 	glEnd();
-	// glBegin(GL_POLYGON);                // start drawing a polygon
-  	// glColor3d(1.0f,0.0f,0.0f);            // Set The Color To Red
-  	// glVertex3d(-1.0f, 1.0f, 0.0f);        // Top left
-  	// glVertex3d(0.4f, 1.0f, 0.0f);
-	
-  	// glVertex3d(1.0f, 0.4f, 0.0f);
-  
-  	// glColor3d(0.0f,1.0f,0.0f);            // Set The Color To Green
-  	// glVertex3d( 1.0f,0.0f, 0.0f);        // Bottom Right
-  	// glColor3d(0.0f,0.0f,1.0f);            // Set The Color To Blue
-  	// glVertex3d(-1.0f,0.0f, 0.0f);// Bottom Left    
-
-  //glVertex3f();
-  glEnd(); 
 }
 
 
@@ -223,17 +220,21 @@ void tree(double h, double z)
 
 	glPushMatrix();
 	glTranslated(0, h * 170, 0);
-	glPushMatrix();
-	glColor3d(0.2, green, 0.2);
-	glTranslated(0, -h * 120 / h, 0);
-		leaf(400, z);
+	for (int i = h; i > 0; i--)
+	{
+		glPushMatrix();
+		glColor3d(0.2, green, 0.2);
+		glTranslated(0, -h * 120 / i, 0);
+		leaf(h * 100 / i, z);
 		glPopMatrix();
 
 		green -= 0.1;
+	}
 	glPopMatrix();
 
 	glColor3d(0.3, 0.1, 0.1);
 	rectangleD(-40, -100, 40, 100, z);
+
 
 }
 
@@ -303,7 +304,7 @@ void frame1() {
 
 	// Sky and bushes
 	glBegin(GL_POLYGON);
-	glColor3d(0.1, 0.6, 0.1);
+	glColor3d(0.1, 0.1, 0.7);
 	glVertex3d(-UNIT * aspectRatio, -UNIT / 2, -9);
 	glVertex3d(UNIT * aspectRatio, -UNIT / 2, -9);
 	glColor3d(0.1, 0.1, 0.7);
