@@ -272,6 +272,22 @@ void frame0() {
 }
 
 void frame1() {
+
+	char string0_1[] = "Petrol car is harmful for the environment.";
+
+
+	// Display "GO Smart Watch"
+	glPushMatrix();
+	glTranslatef(-1600, 400, 0);
+	glColor3f(1, 0, 0);
+	drawText(string0_1);
+	glPopMatrix();
+
+	
+	glFlush();
+}
+
+void frame2() {
 	
 	glClearColor(0, 0, 0, 0);
 		// Tree 1
@@ -315,7 +331,7 @@ void frame1() {
 
 	glPushMatrix();
 	glTranslated(moveX_Amb, 0, 0);
-	glTranslated(- 400, -400, 0);
+	glTranslated(-UNIT * aspectRatio - 400, -400, 0);
 	car(1, 0, 0);
 	glPopMatrix();
 
@@ -323,7 +339,23 @@ void frame1() {
 	
 }
 
-void frame2() {
+void frame3() {
+
+	char string0_1[] = "Electric car has zero emmisions";
+
+
+	// Display "GO Smart Watch"
+	glPushMatrix();
+	glTranslatef(-1400, 400, 0);
+	glColor3f(1, 0, 0);
+	drawText(string0_1);
+	glPopMatrix();
+
+	
+	glFlush();
+}
+
+void frame4() {
 
     glClearColor(0, 0, 0, 0);
 		// Tree 1
@@ -492,8 +524,12 @@ void myDisplay()
 	switch (frame)
 	{
 	case 0:	frame0();	break;
-	case 1:	frame1();	break;
+	case 1:
+            
+        	frame1();	break;
     case 2:	frame2();	break;
+    case 3:	frame3();	break;
+    case 4:	frame4();	break;
 
 	default:	
 //		frameEnd();
@@ -519,11 +555,7 @@ void control()
 		break;
 
 	case 1:		// Frame 1
-		if (!animate_car())
-		{
-			speed = 0.006;
-			frame++;
-		}
+		
 		
 		break;
 
@@ -533,32 +565,18 @@ void control()
 			speed = 0.006;
 			frame++;
 		}
-		
 		break;
 
-	// case 3:		// Frame 3
-	// 	if (!animate_textZoom())
-	// 	{
-	// 		speed = 2;
-	// 		frame++;
-	// 	}
-	// 	break;
+	case 3:		// Frame 3
+		break;
 
-	// case 4:		// Frame 4
-	// 	switch (flag_fall)
-	// 	{
-	// 	case 0: animate_walk();		break;
-	// 	case 1:	animate_fall();		break;
-	// 	case 2:
-	// 		if (!animate_walk1())
-	// 		{
-	// 			speed = 0.01;
-	// 			scale = 0.1;
-	// 			frame++;
-	// 		}
-	// 		break;
-	// 	}
-	// 	break;
+	case 4:		// Frame 4
+		if (!animate_car())
+		{
+			speed = 0.006;
+			frame++;
+		}
+		break;
 
 	// case 5:		// Frame 5
 	// 	if (!animate_textZoom())
