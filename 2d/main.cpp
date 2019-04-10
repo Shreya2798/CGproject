@@ -39,7 +39,7 @@ double moveX = 0;
 double moveX1 = UNIT * 2;
 double angle2 = 0;
 
-// Ambulance
+// car
 double moveX_Amb = 0;
 
 int flag_fall = 0;
@@ -62,7 +62,7 @@ void myKeyboard(unsigned char key, int x, int y);
 void timer(int);
 void control();
 
-bool animate_ambulance()
+bool animate_car()
 {
 
 	moveX_Amb += speed * 7;
@@ -137,9 +137,9 @@ void rectangleD(double x1, double y1, double x2, double y2, double z)
 	glEnd();
 }
 
-void ambulance()
+void car()
 {
-	// char stringO_1[] = "AMBULANCE";
+	// char stringO_1[] = "car";
 
 	// // Display Text
 	// glPushMatrix();
@@ -153,7 +153,7 @@ void ambulance()
 	glColor3d(1, 1, 1);
 	rectangleD(-50, -200, 360, 100, 2);
 	
-	// Ambulance Engine
+	// car Engine
 	glBegin(GL_POLYGON);
 	glColor3d(1, 1, 1);
 	glVertex3d(355, -200, 2);
@@ -165,16 +165,16 @@ void ambulance()
 	glVertex3d(355, 100, 2);
 	glEnd();
 	
-    // Ambulance Engine
+    // car Engine
 	glBegin(GL_POLYGON);
 	glColor3d(1, 1, 1);
-	glVertex3d(355, -200, 2);
-	glVertex3d(650, -200, 2);
-	glVertex3d(650, -65, 2);
-	glVertex3d(635, -50, 2);
-	glVertex3d(550, -50, 2);
-	glVertex3d(500, 100, 2);
-	glVertex3d(355, 100, 2);
+	glVertex3d(-50, -200, 2);
+	glVertex3d(-345, -200, 2);
+	glVertex3d(-345, -65, 2);
+	glVertex3d(-330, -50, 2);
+	glVertex3d(-245, -50, 2);
+	glVertex3d(-195, 100, 2);
+	glVertex3d(-10, 100, 2);
 	glEnd();
 
 	// Back Tire
@@ -189,9 +189,9 @@ void ambulance()
 	//Front Tire
 	glPushMatrix();
 	glTranslated(500, -210, 0);
-	glColor3d(0, 0, 0);		// Tire
-	circleD(100, 3);
-	glColor3d(0.8, 0, 0);	// Rim
+	glColor3d(0.5, 0.5, 0.5);			// Tire
+	circleD(75, 3);
+	glColor3d(0,0 , 0);	// Rim
 	circleD(50, 4);
 	glPopMatrix();
 
@@ -316,7 +316,7 @@ void frame1() {
 	glPushMatrix();
 	glTranslated(moveX_Amb, 0, 0);
 	glTranslated(-UNIT * aspectRatio - 400, -400, 0);
-	ambulance();
+	car();
 	glPopMatrix();
 
 	glFlush();
@@ -495,7 +495,7 @@ void control()
 		break;
 
 	case 1:		// Frame 1
-		if (!animate_ambulance())
+		if (!animate_car())
 		{
 			speed = 0.006;
 			frame++;
@@ -544,7 +544,7 @@ void control()
 	// 	break;
 
 	// case 6:		// Frame 6
-	// 	if (!animate_ambulance())
+	// 	if (!animate_car())
 	// 	{
 	// 		speed = 0.006;
 	// 		frame++;
@@ -624,7 +624,7 @@ void control()
 	// 	break;
 	
 	// case 15:
-	// 	if (!animate_ambulance())
+	// 	if (!animate_car())
 	// 	{
 	// 		speed = 0.006;
 	// 		frame++;
