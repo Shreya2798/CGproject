@@ -137,7 +137,7 @@ void rectangleD(double x1, double y1, double x2, double y2, double z)
 	glEnd();
 }
 
-void car()
+void car(int r, int g, int b)
 {
 	// char stringO_1[] = "car";
 
@@ -150,12 +150,12 @@ void car()
 	// glPopMatrix();
 
 	// Car Body
-	glColor3d(1, 1, 1);
+	glColor3d(r, g, b);
 	rectangleD(-50, -200, 360, 100, 2);
 	
 	// car Engine
 	glBegin(GL_POLYGON);
-	glColor3d(1, 1, 1);
+	glColor3d(r, g, b);
 	glVertex3d(355, -200, 2);
 	glVertex3d(650, -200, 2);
 	glVertex3d(650, -65, 2);
@@ -165,9 +165,9 @@ void car()
 	glVertex3d(355, 100, 2);
 	glEnd();
 	
-    // car Engine
+    // car back
 	glBegin(GL_POLYGON);
-	glColor3d(1, 1, 1);
+	glColor3d(r, g, b);
 	glVertex3d(-50, -200, 2);
 	glVertex3d(-345, -200, 2);
 	glVertex3d(-345, -65, 2);
@@ -315,40 +315,63 @@ void frame1() {
 
 	glPushMatrix();
 	glTranslated(moveX_Amb, 0, 0);
-	glTranslated(-UNIT * aspectRatio - 400, -400, 0);
-	car();
+	glTranslated(- 400, -400, 0);
+	car(1, 0, 0);
 	glPopMatrix();
 
 	glFlush();
 	
-	// char string0_1[] = "Electric car 2";
-	// char string0_2[] = "Animated AD.";
-	// char string0_3[] = "Press 'Spacebar' to Play...";
+}
 
+void frame2() {
 
-	// Display "GO Smart Watch"
-	// glPushMatrix();
-	// glTranslatef(-500, 400, 0);
-	// glColor3f(1, 0, 0);
-	// drawText(string0_1);
-	// glPopMatrix();
+    glClearColor(0, 0, 0, 0);
+		// Tree 1
+	glPushMatrix();
+	glTranslated(UNIT / 2, -UNIT / 2.5, 0);
+	tree(7, -9);
+	glPopMatrix();
 
-	// // Display  "Animated AD."
-	// glPushMatrix();
-	// glTranslatef(100, 250, 0);
-	// glScaled(0.7, 0.7, 0);
-	// drawText(string0_2);
-	// glPopMatrix();
+	// Tree 2
+	glPushMatrix();
+	glTranslated(UNIT * aspectRatio, -UNIT / 2.5, 0);
+	tree(3, -9);
+	glPopMatrix();
 
-	// // Display "Press Spacebar to Play...".
-	// glPushMatrix();
-	// glTranslatef(500, -500, 0);
-	// glScaled(0.4, 0.4, 0);
-	// glColor3f(1, 1, 0);
-	// drawText(string0_3);
-	// glPopMatrix();
+	// Tree 3
+	glPushMatrix();
+	glTranslated(-UNIT, -UNIT / 2.5, 0);
+	tree(4, -9);
+	glPopMatrix();
+
 	
-	// glFlush();
+	// Road
+	glBegin(GL_POLYGON);
+	glColor3d(0, 0, 0);
+	glVertex3d(-UNIT * aspectRatio, -UNIT, -9);
+	glVertex3d(UNIT * aspectRatio, -UNIT, -9);
+	glVertex3d(UNIT * aspectRatio, -UNIT / 2, -9);
+	glVertex3d(-UNIT * aspectRatio, -UNIT / 2, -9);
+	glEnd();
+
+	// Sky and bushes
+	glBegin(GL_POLYGON);
+	glColor3d(0.1, 0.1, 0.7);
+	glVertex3d(-UNIT * aspectRatio, -UNIT / 2, -9);
+	glVertex3d(UNIT * aspectRatio, -UNIT / 2, -9);
+	glColor3d(0.1, 0.1, 0.7);
+	glVertex3d(UNIT * aspectRatio, UNIT, -9);
+	glVertex3d(-UNIT * aspectRatio, UNIT, -9);
+	glEnd();
+	glFlush();
+
+	glPushMatrix();
+	glTranslated(moveX_Amb, 0, 0);
+	glTranslated(-UNIT * aspectRatio - 400, -400, 0);
+	car(0, 0, 1);
+	glPopMatrix();
+
+	glFlush();
 }
 
 
@@ -470,6 +493,7 @@ void myDisplay()
 	{
 	case 0:	frame0();	break;
 	case 1:	frame1();	break;
+    case 2:	frame2();	break;
 
 	default:	
 //		frameEnd();
@@ -503,13 +527,14 @@ void control()
 		
 		break;
 
-	// case 2:		// Frame 2
-	// 	if (!animate_textZoom())
-	// 	{
-	// 		speed = 0.01;
-	// 		frame++;
-	// 	}
-	// 	break;
+	case 2:		// Frame 2
+		if (!animate_car())
+		{
+			speed = 0.006;
+			frame++;
+		}
+		
+		break;
 
 	// case 3:		// Frame 3
 	// 	if (!animate_textZoom())
