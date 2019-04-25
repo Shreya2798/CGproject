@@ -1,9 +1,16 @@
-#include<GL/freeglut.h>
+#include <GL/freeglut.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <time.h>
 #include <math.h>
+#include <GL/freeglut.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
+#include <time.h>
+#include <math.h>
+
+
 // Main.cpp
 #define UNIT 960
 #define ESC 27
@@ -18,7 +25,7 @@
 
 int w_width = 1920;
 int w_height = 1080;
-double aspectRatio = (double) w_width / (double) w_height;
+double aspectRatio = (double)w_width / (double)w_height;
 
 int frame = 0;		// Default: 0
 int window3D = 0;	// if 0 then Ortho else 1 then Perspective
@@ -42,6 +49,8 @@ double angle2 = 0;
 // car
 double moveX_Amb = 0;
 
+double movTree = 0;
+
 int flag_fall = 0;
 
 // Character S
@@ -58,7 +67,7 @@ double blue = 0;
 void myInit();
 void myReshape(int width, int height);
 void myDisplay();
-void myKeyboard(unsigned char key, int x, int y); 
+void myKeyboard(unsigned char key, int x, int y);
 void timer(int);
 void control();
 
@@ -68,6 +77,12 @@ bool animate_car()
 	moveX_Amb += speed * 7;
 
 	return true;
+}
+
+void animate_tree() {
+	
+	if (movTree <= 91.0)
+		movTree += 0.5;
 }
 
 bool animate_textZoom()
@@ -152,7 +167,7 @@ void car(int r, int g, int b)
 	// Car Body
 	glColor3d(r, g, b);
 	rectangleD(-50, -200, 360, 100, 2);
-	
+
 	// car Engine
 	glBegin(GL_POLYGON);
 	glColor3d(r, g, b);
@@ -164,8 +179,8 @@ void car(int r, int g, int b)
 	glVertex3d(500, 100, 2);
 	glVertex3d(355, 100, 2);
 	glEnd();
-	
-    // car back
+
+	// car back
 	glBegin(GL_POLYGON);
 	glColor3d(r, g, b);
 	glVertex3d(-50, -200, 2);
@@ -182,7 +197,7 @@ void car(int r, int g, int b)
 	glTranslated(-250, -210, 0);
 	glColor3d(0.5, 0.5, 0.5);		// Tire
 	circleD(75, 3);
-	glColor3d(0,0 , 0);	// Rim
+	glColor3d(0, 0, 0);	// Rim
 	circleD(50, 4);
 	glPopMatrix();
 
@@ -191,7 +206,7 @@ void car(int r, int g, int b)
 	glTranslated(500, -210, 0);
 	glColor3d(0.5, 0.5, 0.5);			// Tire
 	circleD(75, 3);
-	glColor3d(0,0 , 0);	// Rim
+	glColor3d(0, 0, 0);	// Rim
 	circleD(50, 4);
 	glPopMatrix();
 
@@ -217,7 +232,6 @@ void leaf(double x, double z)
 void tree(double h, double z)
 {
 	green = 1;
-
 	glPushMatrix();
 	glTranslated(0, h * 170, 0);
 	for (int i = h; i > 0; i--)
@@ -238,6 +252,35 @@ void tree(double h, double z)
 
 }
 
+void milestone()
+{
+	std::string milestone1 = "300 kms";
+	std::string milestone2 = "450 kms";
+	glColor3d(1, 0, 0);
+	rectangleD(0, 0, 100, 100, 25);
+}
+void box (double r, double g, double b, char txt1[], char txt2[])
+{
+	
+	
+	// Display Text
+	glPushMatrix();
+	glTranslatef(0, 500, 22);
+	glScaled(0.5, 0.5, 0);
+	glColor3f(0, 0, 0);
+	drawText(txt1);
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(0, 300, 22);
+	glScaled(0.5, 0.5, 0);
+	glColor3f(0, 0, 0);
+	drawText(txt2);
+	glPopMatrix();
+	
+	glColor3f(r, g, b);
+	rectangleD(0,0,400,700,21);
+}
+
 // Welcome screen
 void frame0() {
 
@@ -246,7 +289,7 @@ void frame0() {
 	char string0_3[] = "Press 'Spacebar' to Play...";
 
 
-	// Display "GO Smart Watch"
+	// Display "Electric Car"
 	glPushMatrix();
 	glTranslatef(-500, 400, 0);
 	glColor3f(1, 0, 0);
@@ -267,7 +310,7 @@ void frame0() {
 	glColor3f(1, 1, 0);
 	drawText(string0_3);
 	glPopMatrix();
-	
+
 	glFlush();
 }
 
@@ -276,39 +319,44 @@ void frame1() {
 	char string0_1[] = "Petrol car is harmful for the environment.";
 
 
-	// Display "GO Smart Watch"
+	// Display "Petrol car is harmful for the environment"
 	glPushMatrix();
 	glTranslatef(-1600, 400, 0);
 	glColor3f(1, 0, 0);
 	drawText(string0_1);
 	glPopMatrix();
 
-	
+
+
 	glFlush();
 }
 
 void frame2() {
-	
+
 	glClearColor(0, 0, 0, 0);
-		// Tree 1
+	// Tree 1
 	glPushMatrix();
 	glTranslated(UNIT / 2, -UNIT / 2.5, 0);
+	glRotated(movTree, 0, 0, 1);
 	tree(7, -9);
 	glPopMatrix();
 
+	
 	// Tree 2
 	glPushMatrix();
 	glTranslated(UNIT * aspectRatio, -UNIT / 2.5, 0);
+	glRotated(movTree, 0, 0, 1);
 	tree(3, -9);
 	glPopMatrix();
 
 	// Tree 3
 	glPushMatrix();
 	glTranslated(-UNIT, -UNIT / 2.5, 0);
+	glRotated(movTree, 0, 0, 1);
 	tree(4, -9);
 	glPopMatrix();
 
-	
+
 	// Road
 	glBegin(GL_POLYGON);
 	glColor3d(0, 0, 0);
@@ -321,14 +369,15 @@ void frame2() {
 	// Sky and bushes
 	glBegin(GL_POLYGON);
 	glColor3d(0.1, 0.1, 0.7);
-	glVertex3d(-UNIT * aspectRatio, -UNIT / 2, -9);
-	glVertex3d(UNIT * aspectRatio, -UNIT / 2, -9);
+	glVertex3d(-UNIT * aspectRatio, -UNIT / 2, -12);
+	glVertex3d(UNIT * aspectRatio, -UNIT / 2, -12);
 	glColor3d(0.1, 0.1, 0.7);
-	glVertex3d(UNIT * aspectRatio, UNIT, -9);
-	glVertex3d(-UNIT * aspectRatio, UNIT, -9);
+	glVertex3d(UNIT * aspectRatio, UNIT, -12);
+	glVertex3d(-UNIT * aspectRatio, UNIT, -12);
 	glEnd();
 	glFlush();
 
+	//car
 	glPushMatrix();
 	glTranslated(moveX_Amb, 0, 0);
 	glTranslated(-UNIT * aspectRatio - 400, -400, 0);
@@ -336,7 +385,7 @@ void frame2() {
 	glPopMatrix();
 
 	glFlush();
-	
+
 }
 
 void frame3() {
@@ -351,14 +400,14 @@ void frame3() {
 	drawText(string0_1);
 	glPopMatrix();
 
-	
+
 	glFlush();
 }
 
 void frame4() {
 
-    glClearColor(0, 0, 0, 0);
-		// Tree 1
+	glClearColor(0, 0, 0, 0);
+	// Tree 1
 	glPushMatrix();
 	glTranslated(UNIT / 2, -UNIT / 2.5, 0);
 	tree(7, -9);
@@ -376,7 +425,7 @@ void frame4() {
 	tree(4, -9);
 	glPopMatrix();
 
-	
+
 	// Road
 	glBegin(GL_POLYGON);
 	glColor3d(0, 0, 0);
@@ -406,6 +455,162 @@ void frame4() {
 	glFlush();
 }
 
+void frame5()
+{
+
+	char string0_1[] = "Fossil Fuels are costly";
+
+
+	// Display "GO Smart Watch"
+	glPushMatrix();
+	glTranslatef(-1400, 400, 0);
+	glColor3f(1, 0, 0);
+	drawText(string0_1);
+	glPopMatrix();
+
+
+	glFlush();
+}
+
+
+void frame6()
+{
+	glClearColor(0, 0, 0, 0);
+	// Tree 1
+	glPushMatrix();
+	glTranslated(UNIT / 2, -UNIT / 2.5, 0);
+	tree(7, -9);
+	glPopMatrix();
+
+	//Fuel Box
+	glPushMatrix();
+	glTranslated(-700, -UNIT / 2.5 - 95, -30);
+	glColor3d(1, 0, 0);
+	char petrol[] = "Petrol";
+	char milestone1[] = "$$$";
+	box(0.54, 0, 0, petrol, milestone1);
+	glPopMatrix();
+
+	// Tree 2
+	glPushMatrix();
+	glTranslated(UNIT * aspectRatio, -UNIT / 2.5, 0);
+	tree(3, -9);
+	glPopMatrix();
+
+	// Tree 3
+	glPushMatrix();
+	glTranslated(-UNIT, -UNIT / 2.5, 0);
+	tree(4, -9);
+	glPopMatrix();
+
+
+	// Road
+	glBegin(GL_POLYGON);
+	glColor3d(0, 0, 0);
+	glVertex3d(-UNIT * aspectRatio, -UNIT, -9);
+	glVertex3d(UNIT * aspectRatio, -UNIT, -9);
+	glVertex3d(UNIT * aspectRatio, -UNIT / 2, -9);
+	glVertex3d(-UNIT * aspectRatio, -UNIT / 2, -9);
+	glEnd();
+
+	// Sky and bushes
+	glBegin(GL_POLYGON);
+	glColor3d(0.1, 0.1, 0.7);
+	glVertex3d(-UNIT * aspectRatio, -UNIT / 2, -9);
+	glVertex3d(UNIT * aspectRatio, -UNIT / 2, -9);
+	glColor3d(0.1, 0.1, 0.7);
+	glVertex3d(UNIT * aspectRatio, UNIT, -9);
+	glVertex3d(-UNIT * aspectRatio, UNIT, -9);
+	glEnd();
+	glFlush();
+
+	glPushMatrix();
+	glTranslated(moveX_Amb, 0, 0);
+	glTranslated(-UNIT * aspectRatio - 400, -400, 0);
+	car(1, 0, 0);
+	glPopMatrix();
+
+	glFlush();
+
+}
+
+void frame7()
+{
+
+	char string0_1[] = "Electricity is cheaper and greener";
+
+
+	// Display "GO Smart Watch"
+	glPushMatrix();
+	glTranslatef(-1400, 400, 0);
+	glColor3f(1, 0, 0);
+	drawText(string0_1);
+	glPopMatrix();
+
+
+	glFlush();
+}
+
+void frame8()
+{
+	glClearColor(0, 0, 0, 0);
+	// Tree 1
+	glPushMatrix();
+	glTranslated(UNIT / 2, -UNIT / 2.5, 0);
+	tree(7, -9);
+	glPopMatrix();
+
+	//Fuel Box
+	glPushMatrix();
+	glTranslated(-700, -UNIT / 2.5 - 95, -30);
+	glColor3d(0, 1, 0);
+	char petrol[] = "Electric";
+	char milestone1[] = "$";
+	box(0, 0.54, 0, petrol, milestone1);
+	glPopMatrix();
+
+	// Tree 2
+	glPushMatrix();
+	glTranslated(UNIT * aspectRatio, -UNIT / 2.5, 0);
+	tree(3, -9);
+	glPopMatrix();
+
+	// Tree 3
+	glPushMatrix();
+	glTranslated(-UNIT, -UNIT / 2.5, 0);
+	tree(4, -9);
+	glPopMatrix();
+
+
+	// Road
+	glBegin(GL_POLYGON);
+	glColor3d(0, 0, 0);
+	glVertex3d(-UNIT * aspectRatio, -UNIT, -9);
+	glVertex3d(UNIT * aspectRatio, -UNIT, -9);
+	glVertex3d(UNIT * aspectRatio, -UNIT / 2, -9);
+	glVertex3d(-UNIT * aspectRatio, -UNIT / 2, -9);
+	glEnd();
+
+	// Sky and bushes
+	glBegin(GL_POLYGON);
+	glColor3d(0.1, 0.1, 0.7);
+	glVertex3d(-UNIT * aspectRatio, -UNIT / 2, -9);
+	glVertex3d(UNIT * aspectRatio, -UNIT / 2, -9);
+	glColor3d(0.1, 0.1, 0.7);
+	glVertex3d(UNIT * aspectRatio, UNIT, -9);
+	glVertex3d(-UNIT * aspectRatio, UNIT, -9);
+	glEnd();
+	glFlush();
+
+	glPushMatrix();
+	glTranslated(moveX_Amb, 0, 0);
+	glTranslated(-UNIT * aspectRatio - 400, -400, 0);
+	car(0, 0, 1);
+	glPopMatrix();
+
+	glFlush();
+
+}
 
 int main(int argc, char **argv)
 {
@@ -449,7 +654,7 @@ void myInit()
 		glShadeModel(GL_SMOOTH);   // Enable smooth shading
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Nice perspective corrections
 	}
-	
+
 }
 
 void myReshape(int width, int height)
@@ -480,7 +685,7 @@ void myReshape(int width, int height)
 		glLoadIdentity();
 		glTranslatef(0, 0, -2000);
 	}
-	
+
 	// Update the window width and height.
 	w_width = width;
 	w_height = height;
@@ -493,7 +698,9 @@ void myKeyboard(unsigned char key, int x, int y)
 	switch ((int)key)
 	{
 	case ESC: exit(0);		break;
-	case SPACE: frame++;	break;
+	case SPACE: frame++;
+		moveX_Amb = 0;
+		break;
 
 	case f: flag_fall++;	break;	// for Debug
 
@@ -525,21 +732,25 @@ void myDisplay()
 	{
 	case 0:	frame0();	break;
 	case 1:
-            
-        	frame1();	break;
-    case 2:	frame2();	break;
-    case 3:	frame3();	break;
-    case 4:	frame4();	break;
 
-	default:	
-//		frameEnd();
+		frame1();	break;
+	case 2:	frame2();	break;
+	case 3:	frame3();	break;
+	case 4:	frame4();	break;
+	case 5: frame5();	break;
+	case 6: frame6();	break;
+	case 7: frame7();	break;
+	case 8: frame8();	break;
+
+	default:
+		//		frameEnd();
 		break;
 	}
 
 	glutSwapBuffers();
 }
 
-void timer(int)		
+void timer(int)
 {	// Function runs throughtout the code every 1/60 th of a min (FPS = 60)
 	control();	// Check which frame to animate
 	glutPostRedisplay();	// Trigger myDisplay()
@@ -555,16 +766,18 @@ void control()
 		break;
 
 	case 1:		// Frame 1
-		
-		
+
+
 		break;
 
 	case 2:		// Frame 2
 		if (!animate_car())
 		{
 			speed = 0.006;
+			moveX_Amb = 0;
 			frame++;
 		}
+		animate_tree();
 		break;
 
 	case 3:		// Frame 3
@@ -578,120 +791,110 @@ void control()
 		}
 		break;
 
-	// case 5:		// Frame 5
-	// 	if (!animate_textZoom())
-	// 	{
-	// 		speed = 1;
-	// 		frame++;
-	// 	}
-	// 	break;
+		case 5:		// Frame 5
+			
+			break;
 
-	// case 6:		// Frame 6
-	// 	if (!animate_car())
-	// 	{
-	// 		speed = 0.006;
-	// 		frame++;
-	// 	}
-	// 	break;
+		case 6:		// Frame 6
+			if (!animate_car())
+			{
+				speed = 0.006;
+				frame++;
+			}
+			break;
 
-	// case 7:		// Frame 7
-	// 	if (!animate_textZoom())
-	// 	{
-	// 		speed = 0.006;
-	// 		frame++;
-	// 	}
-	// 	break;
+		case 7:		// Frame 7
 
-	// case 8:
-	// 	if (!animate_textZoom())
-	// 	{
-	// 		speed = 0.006;
-	// 		frame++;
-	// 	}
-	// 	break;
+			break;
 
-	// case 9:
-	// 	if (!animate_textZoom())
-	// 	{
-	// 		speed = 0.006;
-	// 		frame++;
-	// 	}
-	// 	break;
-	
-	// case 10:
-	// 	if (!animate_textZoom())
-	// 	{
-	// 		speed = 2;
-	// 		frame++;
-	// 	}
-	// 	break;
+		case 8:
+			if (!animate_car())
+			{
+				speed = 0.006;
+				frame++;
+			}
+			break;
 
-	// case 11:
-	// 	switch (flag_fallS)
-	// 	{
-	// 	case 0: animate_walkCharS();		break;
-	// 	case 1:	
-	// 		if (!animate_fallCharS())
-	// 		{
-	// 			speed = 0.006;
-	// 			scale = 0.1;
-	// 			frame++;
-	// 		}
-	// 		break;
-	// 	}
-	// 	break;
+		// case 9:
+		// 	if (!animate_textZoom())
+		// 	{
+		// 		speed = 0.006;
+		// 		frame++;
+		// 	}
+		// 	break;
 
-	// case 12:
-	// 	if (!animate_textZoom())
-	// 	{
-	// 		speed = 0.006;
-	// 		frame++;
-	// 	}
-	// 	break;
+		// case 10:
+		// 	if (!animate_textZoom())
+		// 	{
+		// 		speed = 2;
+		// 		frame++;
+		// 	}
+		// 	break;
 
-	// case 13:
-	// 	if (!animate_textZoom())
-	// 	{
-	// 		speed = 0.006;
-	// 		frame++;
-	// 	}
-	// 	break;
-	
-	// case 14:
-	// 	if (!animate_textZoom())
-	// 	{
-	// 		speed = 2;
-	// 		moveX_Amb = 0;
-	// 		frame++;
-	// 	}
-	// 	break;
-	
-	// case 15:
-	// 	if (!animate_car())
-	// 	{
-	// 		speed = 0.006;
-	// 		frame++;
-	// 	}
-	// 	break;
+		// case 11:
+		// 	switch (flag_fallS)
+		// 	{
+		// 	case 0: animate_walkCharS();		break;
+		// 	case 1:	
+		// 		if (!animate_fallCharS())
+		// 		{
+		// 			speed = 0.006;
+		// 			scale = 0.1;
+		// 			frame++;
+		// 		}
+		// 		break;
+		// 	}
+		// 	break;
 
-	// case 16:
-	// 	if (!animate_textZoom())
-	// 	{
-	// 		speed = 0.006;
-	// 		window3D = 1;
-	// 	}
-	// 	break;
+		// case 12:
+		// 	if (!animate_textZoom())
+		// 	{
+		// 		speed = 0.006;
+		// 		frame++;
+		// 	}
+		// 	break;
 
-	// case 17:
-	// 	break;
+		// case 13:
+		// 	if (!animate_textZoom())
+		// 	{
+		// 		speed = 0.006;
+		// 		frame++;
+		// 	}
+		// 	break;
 
-	// case 18: 
-	// 	window3D = 0;
-	// 	break;
+		// case 14:
+		// 	if (!animate_textZoom())
+		// 	{
+		// 		speed = 2;
+		// 		moveX_Amb = 0;
+		// 		frame++;
+		// 	}
+		// 	break;
+
+		// case 15:
+		// 	if (!animate_car())
+		// 	{
+		// 		speed = 0.006;
+		// 		frame++;
+		// 	}
+		// 	break;
+
+		// case 16:
+		// 	if (!animate_textZoom())
+		// 	{
+		// 		speed = 0.006;
+		// 		window3D = 1;
+		// 	}
+		// 	break;
+
+		// case 17:
+		// 	break;
+
+		// case 18: 
+		// 	window3D = 0;
+		// 	break;
 
 	default:
 		break;
 	}
 }
-
-
