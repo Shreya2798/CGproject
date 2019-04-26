@@ -48,7 +48,7 @@ double angle2 = 0;
 
 // car
 double moveX_Amb = 0;
-
+double moveX_Amb_stop = 0;
 double movTree = 0;
 
 int flag_fall = 0;
@@ -71,10 +71,18 @@ void myKeyboard(unsigned char key, int x, int y);
 void timer(int);
 void control();
 
+bool animate_car_stop()
+{
+	if (moveX_Amb_stop <= 1500)
+		moveX_Amb_stop += speed * 7;
+
+	return true;
+}
+
 bool animate_car()
 {
 
-	moveX_Amb += speed * 7;
+	moveX_Amb += speed * 20;
 
 	return true;
 }
@@ -732,7 +740,7 @@ void frame10()
 	glFlush();
 
 	glPushMatrix();
-	glTranslated(moveX_Amb, 0, 0);
+	glTranslated(moveX_Amb_stop, 0, 0);
 	glTranslated(-UNIT * aspectRatio - 400, -400, 0);
 	car(1, 0, 0);
 	glPopMatrix();
@@ -1020,7 +1028,7 @@ void control()
 		// 	break;
 
 		case 10:
-			if (!animate_car())
+			if (!animate_car_stop())
 		{
 			speed = 0.006;
 			frame++;
