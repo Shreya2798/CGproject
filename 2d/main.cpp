@@ -80,7 +80,7 @@ bool animate_car()
 }
 
 void animate_tree() {
-	
+
 	if (movTree <= 91.0)
 		movTree += 0.5;
 }
@@ -259,10 +259,10 @@ void milestone()
 	glColor3d(1, 0, 0);
 	rectangleD(0, 0, 100, 100, 25);
 }
-void box (double r, double g, double b, char txt1[], char txt2[])
+void box(double r, double g, double b, char txt1[], char txt2[])
 {
-	
-	
+
+
 	// Display Text
 	glPushMatrix();
 	glTranslatef(0, 500, 22);
@@ -276,9 +276,43 @@ void box (double r, double g, double b, char txt1[], char txt2[])
 	glColor3f(0, 0, 0);
 	drawText(txt2);
 	glPopMatrix();
-	
+
 	glColor3f(r, g, b);
-	rectangleD(0,0,400,700,21);
+	rectangleD(0, 0, 400, 700, 21);
+}
+
+void box2(double r, double g, double b, char txt1[] )
+{
+
+
+	// Display Text
+	glPushMatrix();
+	glTranslatef(0, 150, 22);
+	glScaled(0.5, 0.5, 0);
+	glColor3f(0, 0, 0);
+	drawText(txt1);
+	glPopMatrix();
+
+	glColor3f(r, g, b);
+	rectangleD(0, 0, 300, 200, 21);
+}
+
+
+
+void box3(double r, double g, double b, char txt1[])
+{
+
+
+	// Display Text
+	glPushMatrix();
+	glTranslatef(1300, 150, 22);
+	glScaled(0.5, 0.5, 0);
+	glColor3f(0, 0, 0);
+	drawText(txt1);
+	glPopMatrix();
+
+	glColor3f(r, g, b);
+	rectangleD(1300, 0, 1600, 200, 21);
 }
 
 // Welcome screen
@@ -341,7 +375,7 @@ void frame2() {
 	tree(7, -9);
 	glPopMatrix();
 
-	
+
 	// Tree 2
 	glPushMatrix();
 	glTranslated(UNIT * aspectRatio, -UNIT / 2.5, 0);
@@ -534,6 +568,66 @@ void frame6()
 
 }
 
+void frame8()
+{
+	glClearColor(0, 0, 0, 0);
+	// Tree 1
+	glPushMatrix();
+	glTranslated(UNIT / 2, -UNIT / 2.5, 0);
+	tree(7, -9);
+	glPopMatrix();
+
+	//Fuel Box
+	glPushMatrix();
+	glTranslated(-700, -UNIT / 2.5 - 95, -30);
+	glColor3d(0, 1, 0);
+	char petrol[] = "Electricity";
+	char milestone1[] = "$";
+	box(0.54, 0, 0, petrol, milestone1);
+	glPopMatrix();
+
+	// Tree 2
+	glPushMatrix();
+	glTranslated(UNIT * aspectRatio, -UNIT / 2.5, 0);
+	tree(3, -9);
+	glPopMatrix();
+
+	// Tree 3
+	glPushMatrix();
+	glTranslated(-UNIT, -UNIT / 2.5, 0);
+	tree(4, -9);
+	glPopMatrix();
+
+
+	// Road
+	glBegin(GL_POLYGON);
+	glColor3d(0, 0, 0);
+	glVertex3d(-UNIT * aspectRatio, -UNIT, -9);
+	glVertex3d(UNIT * aspectRatio, -UNIT, -9);
+	glVertex3d(UNIT * aspectRatio, -UNIT / 2, -9);
+	glVertex3d(-UNIT * aspectRatio, -UNIT / 2, -9);
+	glEnd();
+
+	// Sky and bushes
+	glBegin(GL_POLYGON);
+	glColor3d(0.1, 0.1, 0.7);
+	glVertex3d(-UNIT * aspectRatio, -UNIT / 2, -9);
+	glVertex3d(UNIT * aspectRatio, -UNIT / 2, -9);
+	glColor3d(0.1, 0.1, 0.7);
+	glVertex3d(UNIT * aspectRatio, UNIT, -9);
+	glVertex3d(-UNIT * aspectRatio, UNIT, -9);
+	glEnd();
+	glFlush();
+
+	glPushMatrix();
+	glTranslated(moveX_Amb, 0, 0);
+	glTranslated(-UNIT * aspectRatio - 400, -400, 0);
+	car(1, 0, 0);
+	glPopMatrix();
+
+	glFlush();
+
+}
 void frame7()
 {
 
@@ -551,7 +645,41 @@ void frame7()
 	glFlush();
 }
 
-void frame8()
+void frame9()
+{
+
+	char string0_1[] = "Petrol cars have lesser range";
+
+
+	// Display "GO Smart Watch"
+	glPushMatrix();
+	glTranslatef(-1400, 400, 0);
+	glColor3f(1, 0, 0);
+	drawText(string0_1);
+	glPopMatrix();
+
+
+	glFlush();
+}
+
+void frame11()
+{
+
+	char string0_1[] = "Electric cars have a higher range";
+
+
+	// Display "GO Smart Watch"
+	glPushMatrix();
+	glTranslatef(-1400, 400, 0);
+	glColor3f(1, 0, 0);
+	drawText(string0_1);
+	glPopMatrix();
+
+
+	glFlush();
+}
+
+void frame10()
 {
 	glClearColor(0, 0, 0, 0);
 	// Tree 1
@@ -560,13 +688,78 @@ void frame8()
 	tree(7, -9);
 	glPopMatrix();
 
-	//Fuel Box
+	//Milestone
 	glPushMatrix();
 	glTranslated(-700, -UNIT / 2.5 - 95, -30);
-	glColor3d(0, 1, 0);
-	char petrol[] = "Electric";
-	char milestone1[] = "$";
-	box(0, 0.54, 0, petrol, milestone1);
+	glColor3d(1, 1, 1);
+	char petrol[] = "300 kms";
+	char petrol2[] = "400 kms";
+	box2(1, 1, 1, petrol);
+	box3(1, 1, 1, petrol2);
+	glPopMatrix();
+
+	// Tree 2
+	glPushMatrix();
+	glTranslated(UNIT * aspectRatio, -UNIT / 2.5, 0);
+	tree(3, -9);
+	glPopMatrix();
+
+	// Tree 3
+	glPushMatrix();
+	glTranslated(-UNIT, -UNIT / 2.5, 0);
+	tree(4, -9);
+	glPopMatrix();
+
+
+	// Road
+	glBegin(GL_POLYGON);
+	glColor3d(0, 0, 0);
+	glVertex3d(-UNIT * aspectRatio, -UNIT, -9);
+	glVertex3d(UNIT * aspectRatio, -UNIT, -9);
+	glVertex3d(UNIT * aspectRatio, -UNIT / 2, -9);
+	glVertex3d(-UNIT * aspectRatio, -UNIT / 2, -9);
+	glEnd();
+
+	// Sky and bushes
+	glBegin(GL_POLYGON);
+	glColor3d(0.1, 0.1, 0.7);
+	glVertex3d(-UNIT * aspectRatio, -UNIT / 2, -9);
+	glVertex3d(UNIT * aspectRatio, -UNIT / 2, -9);
+	glColor3d(0.1, 0.1, 0.7);
+	glVertex3d(UNIT * aspectRatio, UNIT, -9);
+	glVertex3d(-UNIT * aspectRatio, UNIT, -9);
+	glEnd();
+	glFlush();
+
+	glPushMatrix();
+	glTranslated(moveX_Amb, 0, 0);
+	glTranslated(-UNIT * aspectRatio - 400, -400, 0);
+	car(1, 0, 0);
+	glPopMatrix();
+
+	glFlush();
+
+
+	
+}
+
+void frame12()
+{
+	glClearColor(0, 0, 0, 0);
+	// Tree 1
+	glPushMatrix();
+	glTranslated(UNIT / 2, -UNIT / 2.5, 0);
+	tree(7, -9);
+	glPopMatrix();
+
+	//Milestone
+	glPushMatrix();
+	glTranslated(-700, -UNIT / 2.5 - 95, -30);
+	glColor3d(1, 1, 1);
+	char petrol[] = "300 kms";
+	char petrol2[] = "400 kms";
+	box2(1, 1, 1, petrol);
+	box3(1, 1, 1, petrol2);
 	glPopMatrix();
 
 	// Tree 2
@@ -741,7 +934,10 @@ void myDisplay()
 	case 6: frame6();	break;
 	case 7: frame7();	break;
 	case 8: frame8();	break;
-
+	case 9: frame9();	break;
+	case 10: frame10();	break;
+	case 11: frame11();	break;
+	case 12: frame12();	break;
 	default:
 		//		frameEnd();
 		break;
@@ -791,29 +987,29 @@ void control()
 		}
 		break;
 
-		case 5:		// Frame 5
-			
-			break;
+	case 5:		// Frame 5
 
-		case 6:		// Frame 6
-			if (!animate_car())
-			{
-				speed = 0.006;
-				frame++;
-			}
-			break;
+		break;
 
-		case 7:		// Frame 7
+	case 6:		// Frame 6
+		if (!animate_car())
+		{
+			speed = 0.006;
+			frame++;
+		}
+		break;
 
-			break;
+	case 7:		// Frame 7
 
-		case 8:
-			if (!animate_car())
-			{
-				speed = 0.006;
-				frame++;
-			}
-			break;
+		break;
+
+	case 8:
+		if (!animate_car())
+		{
+			speed = 0.006;
+			frame++;
+		}
+		break;
 
 		// case 9:
 		// 	if (!animate_textZoom())
@@ -823,13 +1019,13 @@ void control()
 		// 	}
 		// 	break;
 
-		// case 10:
-		// 	if (!animate_textZoom())
-		// 	{
-		// 		speed = 2;
-		// 		frame++;
-		// 	}
-		// 	break;
+		case 10:
+			if (!animate_car())
+		{
+			speed = 0.006;
+			frame++;
+		}
+		break;
 
 		// case 11:
 		// 	switch (flag_fallS)
@@ -846,13 +1042,13 @@ void control()
 		// 	}
 		// 	break;
 
-		// case 12:
-		// 	if (!animate_textZoom())
-		// 	{
-		// 		speed = 0.006;
-		// 		frame++;
-		// 	}
-		// 	break;
+		case 12:
+			if (!animate_car())
+		{
+			speed = 0.006;
+			frame++;
+		}
+		break;
 
 		// case 13:
 		// 	if (!animate_textZoom())
